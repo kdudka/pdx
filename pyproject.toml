@@ -1,0 +1,21 @@
+[project]
+name = "pdx"
+version = "0.1.0"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "click",
+    "ipdb",
+    "open-clip-torch",
+    "pillow",
+    "qdrant-client",
+    "torch",
+    "torchvision",
+    "tqdm"
+]
+
+[project.scripts]
+pdx = "pdx.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
