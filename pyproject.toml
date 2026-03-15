@@ -7,6 +7,7 @@ dependencies = [
     "click",
     "open-clip-torch",
     "pillow",
+    "pillow-heif",
     "qdrant-client",
     "torch",
     "torchvision",

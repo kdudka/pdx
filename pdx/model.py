@@ -11,6 +11,14 @@ from typing import cast
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
 
+# add support for HEIC/HEIF images if available
+try:
+    from pillow_heif import register_heif_opener
+
+    register_heif_opener()
+except ImportError:
+    pass
+
 
 MODEL_NAME = "ViT-L-14"
 PRETRAINED = "laion2b_s32b_b82k"
