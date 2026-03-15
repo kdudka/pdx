@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 
-PHOTOS_EXTS = (".jpeg", ".jpg", ".png")
+PHOTOS_EXTS = ("jpeg", "jpg", "png")
 
 
 class Finder:
@@ -25,7 +25,13 @@ class Finder:
     def find_photos_in_dir(self, path: Path) -> None:
         for dir_name, _, files in os.walk(path):
             for f in files:
-                if not f.lower().endswith(PHOTOS_EXTS):
+                _, ext = os.path.splitext(f)
+                if not ext:
+                    # no file extension
+                    continue
+
+                if ext[1:].lower() not in PHOTOS_EXTS:
+                    # not a supported extension
                     continue
 
                 abs_path = Path(dir_name) / f
