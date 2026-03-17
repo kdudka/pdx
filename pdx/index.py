@@ -16,8 +16,8 @@ BATCH_SIZE_CUDA = 250
 class Indexer:
     model: Model
 
-    def __init__(self):
-        self.model = Model()
+    def __init__(self, **kwargs):
+        self.model = Model(**kwargs)
 
     def _index_results(self, vdb: VDB, results: list[str]) -> None:
         if not results:

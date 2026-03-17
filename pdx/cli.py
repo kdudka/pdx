@@ -25,10 +25,15 @@ def pdx():
 @pdx.command()
 @click.option("--collection", "-c", default="default", help="Qdrant collection name.")
 @click.option(
+    "--force-cpu",
+    is_flag=True,
+    help="Force CPU processing (disable CUDA-based acceleration).",
+)
+@click.option(
     "--real-path", is_flag=True, help="Index absolute paths with symlinks expanded."
 )
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
-def index(collection: str, real_path: bool, paths: tuple[str, ...]):
+def index(collection: str, force_cpu: bool, real_path: bool, paths: tuple[str, ...]):
     """Index photos into a Qdrant collection."""
     from pdx.find import find_photos
 
@@ -47,7 +52,7 @@ def index(collection: str, real_path: bool, paths: tuple[str, ...]):
     # delayed initialization of Model/VDB
     from pdx.index import Indexer
 
-    idx = Indexer()
+    idx = Indexer(force_cpu=force_cpu)
     idx.index_photos(collection, photos)
 
 
