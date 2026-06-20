@@ -12,9 +12,17 @@ dependencies = [
     "torch",
     "torchvision",
     "tqdm",
+    "requests",          # Added for Ollama API
+    "reverse_geocoder",  # Added for offline GPS
+    "pyyaml",            # Added to handle config.yaml parsing
 ]
 
 [project.optional-dependencies]
+faces = [
+    "insightface",
+    "onnxruntime",
+    "opencv-python-headless",
+]
 dev = [
     "ipdb",
     "ruff",
@@ -23,6 +31,9 @@ dev = [
 
 [project.scripts]
 pdx = "pdx.cli:main"
+
+[tool.ty.src]
+exclude = ["pdx/faces.py"]
 
 [build-system]
 requires = ["setuptools>=61.0"]

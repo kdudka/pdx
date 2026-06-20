@@ -19,7 +19,7 @@ except ImportError:
 @click.version_option()
 def pdx():
     """PDX: photo indexing and search CLI."""
-    pass
+    logging.basicConfig(level=logging.INFO)
 
 
 @pdx.command()
@@ -37,8 +37,6 @@ def index(collection: str, force_cpu: bool, real_path: bool, paths: tuple[str, .
     """Index photos into a Qdrant collection."""
     from pdx.find import find_photos
 
-    logging.basicConfig(level=logging.INFO)
-
     # collect paths to photos
     photos = find_photos(paths, include_symlinks=real_path)
     cnt = len(photos)
@@ -54,6 +52,25 @@ def index(collection: str, force_cpu: bool, real_path: bool, paths: tuple[str, .
 
     idx = Indexer(force_cpu=force_cpu)
     idx.index_photos(collection, photos)
+
+
+@pdx.command()
+@click.argument("target", type=click.Path())
+@click.option("--collection", "-c", default="default", help="Qdrant collection name.")
+@click.option("--config", "-f", default="config.yaml", help="Path to config file.")
+def organize(target: str, collection: str, config: str):
+    """Organize indexed photos into a structured directory tree."""
+    from pdx.organizer import Organizer
+
+    config_path = os.path.realpath(config)
+    if not os.path.isfile(config_path):
+        raise click.BadParameter(
+            f"Config file not found: {config}\n"
+            "Copy config.example.yaml to config.yaml and adjust it for your setup.",
+            param_hint="'--config'",
+        )
+    org = Organizer(collection, target, config_path=config_path)
+    org.organize()
 
 
 @pdx.command()
@@ -80,7 +97,6 @@ def query(
     """Search photos by natural language query. No query: interactive mode."""
     from pdx.query import QueryHandler
 
-    logging.basicConfig(level=logging.INFO)
     handler = QueryHandler(collection, limit, min_score, viewer)
 
     query_str = " ".join(query_args).strip() if query_args else ""
